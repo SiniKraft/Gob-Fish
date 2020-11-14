@@ -1,0 +1,2 @@
+"Gob Fish !" created by Nathyperfort.
+For reset the better score, make a copy and delete save.dat.
