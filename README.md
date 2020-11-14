@@ -1,5 +1,5 @@
-# Gob Fish
-Gob Fish is a game developped in python where you are a shark who eat fishes.
+# About
+Gob Fish is a game developped in [python](https://www.python.org/downloads/) where you are a shark who eat fishes.
 The more fish you eat, the higher your score will be.
 But be careful there are some dangerous fishes.
 
@@ -9,6 +9,7 @@ This game works with [python](https://www.python.org/downloads/) 3.0 +.
 
 # Installation
 If you want to simply play this game, download the installer [here](https://github.com/SiniKraft/Gob-Fish/raw/main/setup/GobFish_SETUP.exe).
+The installers for Linux and Mac are coming soon.
 
 # Credits and licence
 "Gob Fish" created by [SiniKraft](https://github.com/SiniKraft).
