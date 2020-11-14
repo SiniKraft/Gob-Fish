@@ -4,7 +4,7 @@ The more fish you eat, the higher your score will be.
 But be careful there are some dangerous fishes.
 
 # Code
-If you want to modify the Main.pyw file, don't forget to install [Pygame](https://www.pygame.org/) with [pipy](https://pypi.org/).
+If you want to modify the [Main.pyw](https://github.com/SiniKraft/Gob-Fish/blob/main/Main.pyw) file, don't forget to install [Pygame](https://www.pygame.org/) with [pipy](https://pypi.org/).
 This game works with [python](https://www.python.org/downloads/) 3.0 +.
 
 # Installation
