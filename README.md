@@ -8,4 +8,4 @@ If you want to modify the Main.pyw file, don't forget to install [Pygame](https:
 This game works with [python](https://www.python.org/downloads/) 3.0 +.
 
 # Installation
-If you want to simply play this game, download the installer [here]().
+If you want to simply play this game, download the installer [here].
