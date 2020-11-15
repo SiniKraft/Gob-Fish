@@ -8,7 +8,7 @@ If you want to modify the [Main.pyw](https://github.com/SiniKraft/Gob-Fish/blob/
 This game works with [python](https://www.python.org/downloads/) 3.0 +.
 
 # Installation
-If you want to simply play this game, download the installer [here](https://github.com/SiniKraft/Gob-Fish/releases/download/1.1/GobFish_SETUP.exe).
+If you want to simply play this game, download the installer [here](https://github.com/SiniKraft/Gob-Fish/releases/download/1.2/GobFish_SETUP.exe).
 The installers for Linux and Mac are coming soon.
 
 # Credits and licence
