@@ -9,7 +9,7 @@ This game works with [python](https://www.python.org/downloads/) 3.0 +.
 
 # Installation
 If you want to simply play this game, download the installer [here](https://github.com/SiniKraft/Gob-Fish/releases/download/1.2/GobFish_SETUP.exe).
-The installers for Linux and Mac are coming soon.
+The installers for Linux and Mac are coming soon. See the [wiki](https://github.com/SiniKraft/Gob-Fish/wiki/Gob-Fish-wiki) to play on Mac or Linux.
 
 # Credits and licence
 "Gob Fish" created by [SiniKraft](https://github.com/SiniKraft).
