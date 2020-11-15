@@ -340,9 +340,9 @@ while running:
                     eating = 1
                     can_eat = 0
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_w or event.key == pygame.K_s:
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 player.velocity[1] = 0
-            elif event.key == pygame.K_a or event.key == pygame.K_d:
+            elif event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 player.velocity[0] = 0
 
 
