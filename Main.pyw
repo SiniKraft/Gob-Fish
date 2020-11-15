@@ -323,14 +323,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_UP:
                 player.velocity[1] = -300 * dt  # 300 pixels par seconde
-            elif event.key == pygame.K_s:
+            elif event.key == pygame.K_DOWN:
                 player.velocity[1] = 300 * dt
-            elif event.key == pygame.K_a:
+            elif event.key == pygame.K_LEFT:
                 player.velocity[0] = -300 * dt
                 shark_direction = "left"
-            elif event.key == pygame.K_d:
+            elif event.key == pygame.K_RIGHT:
                 player.velocity[0] = 300 * dt
                 shark_direction = "right"
             elif event.key == pygame.K_ESCAPE:  # Quitter si le bouton echap est pressé.
