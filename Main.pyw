@@ -545,7 +545,6 @@ while running:
         actualiser_texture(poisson7)
 
     # Actualise l'ecran.
-    print(player.rect.y)
     screen.blit(background, (0, 0))
     screen.blit(poisson1.image, poisson1.rect)
     if generated_fishes > 0:
