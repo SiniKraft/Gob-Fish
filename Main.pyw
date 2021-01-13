@@ -12,7 +12,9 @@ try:
     import random
     import pickle
     import os
-except:
+    from Scripts.Class.ClassPlayer import *
+except RuntimeError:
+    import sys
     print("[ERREUR]: Impossible d'importer le modules !")
     sys.exit()
 
@@ -26,8 +28,8 @@ pygame.mixer.init()  # Sons de pygame.
 
 try:
     screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
-except:
-    screen = pygame.display.set_mode(1280, 720)
+except RuntimeError:
+    screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("GobFish")
 clock = pygame.time.Clock()
 FPS = 60
@@ -64,6 +66,22 @@ swim1 = pygame.mixer.Sound("sounds/swim1.ogg")
 swim2 = pygame.mixer.Sound("sounds/swim2.ogg")
 swim3 = pygame.mixer.Sound("sounds/swim3.ogg")
 swim4 = pygame.mixer.Sound("sounds/swim4.ogg")
+
+shark_right_1 = pygame.image.load("textures/shark/animation/right/shark_pos_1.png").convert_alpha()
+shark_right_2 = pygame.image.load("textures/shark/animation/right/shark_pos_2.png").convert_alpha()
+shark_right_3 = pygame.image.load("textures/shark/animation/right/shark_pos_3.png").convert_alpha()
+shark_right_4 = pygame.image.load("textures/shark/animation/right/shark_pos_4.png").convert_alpha()
+shark_right_5 = pygame.image.load("textures/shark/animation/right/shark_pos_5.png").convert_alpha()
+shark_right_6 = pygame.image.load("textures/shark/animation/right/shark_pos_6.png").convert_alpha()
+shark_right_7 = pygame.image.load("textures/shark/animation/right/shark_pos_7.png").convert_alpha()
+
+shark_left_1 = pygame.image.load("textures/shark/animation/left/shark_pos_1.png").convert_alpha()
+shark_left_2 = pygame.image.load("textures/shark/animation/left/shark_pos_2.png").convert_alpha()
+shark_left_3 = pygame.image.load("textures/shark/animation/left/shark_pos_3.png").convert_alpha()
+shark_left_4 = pygame.image.load("textures/shark/animation/left/shark_pos_4.png").convert_alpha()
+shark_left_5 = pygame.image.load("textures/shark/animation/left/shark_pos_5.png").convert_alpha()
+shark_left_6 = pygame.image.load("textures/shark/animation/left/shark_pos_6.png").convert_alpha()
+shark_left_7 = pygame.image.load("textures/shark/animation/left/shark_pos_7.png").convert_alpha()
 
 try:
     file = open("save/save.dat", 'rb')
@@ -108,7 +126,6 @@ estmort = False
 temp = 99
 temp_remains = 0
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -119,6 +136,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = 360
         self.vies = 4
         self.time_vies = 0
+        self.anime_time = 8
+        self.isAnimationFliped = 0
+        self.waitBeforeClose = 0
 
     def update(self):
         self.rect.move_ip(*self.velocity)
@@ -128,6 +148,8 @@ class Player(pygame.sprite.Sprite):
             self.vies = self.vies - 1
             self.time_vies = 30
 
+    def change_texture(self, texture):
+        self.image = texture
 
 class Poisson(pygame.sprite.Sprite):
     def __init__(self):
@@ -324,14 +346,14 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                player.velocity[1] = -300 * dt  # 300 pixels par seconde
+                player.velocity[1] = int(-300 * dt)  # 300 pixels par seconde
             elif event.key == pygame.K_DOWN:
-                player.velocity[1] = 300 * dt
+                player.velocity[1] = int(300 * dt)
             elif event.key == pygame.K_LEFT:
-                player.velocity[0] = -300 * dt
+                player.velocity[0] = int(-300 * dt)
                 shark_direction = "left"
             elif event.key == pygame.K_RIGHT:
-                player.velocity[0] = 300 * dt
+                player.velocity[0] = int(300 * dt)
                 shark_direction = "right"
             elif event.key == pygame.K_ESCAPE:  # Quitter si le bouton echap est pressé.
                 running = False
@@ -339,6 +361,7 @@ while running:
                 if eating == 0 and can_eat == 1:
                     eating = 1
                     can_eat = 0
+                    player.anime_time = 7
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 player.velocity[1] = 0
@@ -492,18 +515,77 @@ while running:
     if time_remaining > 1.3:
         time_remaining = 0
         eating = 0
-        can_eat = 1
+        can_eat = 1  # eat clock
     if shark_direction == "right":
         if eating == 1:
-            player.image = shark_right_open
+            if player.anime_time == 7:
+                player.image = shark_right_7
+                player.change_texture(shark_right_7)
+            else:
+                if player.anime_time == 6:
+                    player.image = shark_right_6
+                    player.change_texture(shark_right_6)
+                else:
+                    if player.anime_time == 5:
+                        player.image = shark_right_5
+                        player.change_texture(shark_right_5)
+                    else:
+                        if player.anime_time == 4:
+                            player.image = shark_right_4
+                            player.change_texture(shark_right_4)
+                        else:
+                            if player.anime_time == 3:
+                                player.image = shark_right_3
+                                player.change_texture(shark_right_3)
+                            else:
+                                if player.anime_time == 2:
+                                    player.image = shark_right_2
+                                    player.change_texture(shark_right_2)
+                                else:
+                                    if player.anime_time == 1:
+                                        player.image = shark_right_1
+                                        player.change_texture(shark_right_1)
+                                    else:
+                                        if player.anime_time == 0:
+                                            player.image = shark_right_open
+                                            player.change_texture(shark_right_open)
         else:
             player.image = shark_right
     if shark_direction == "left":
         if eating == 1:
-            player.image = shark_left_open
+            if player.anime_time == 7:
+                player.image = shark_left_7
+                player.change_texture(shark_left_7)
+            else:
+                if player.anime_time == 6:
+                    player.image = shark_left_6
+                    player.change_texture(shark_left_6)
+                else:
+                    if player.anime_time == 5:
+                        player.image = shark_left_5
+                        player.change_texture(shark_left_5)
+                    else:
+                        if player.anime_time == 4:
+                            player.image = shark_left_4
+                            player.change_texture(shark_left_4)
+                        else:
+                            if player.anime_time == 3:
+                                player.image = shark_left_3
+                                player.change_texture(shark_left_3)
+                            else:
+                                if player.anime_time == 2:
+                                    player.image = shark_left_2
+                                    player.change_texture(shark_left_2)
+                                else:
+                                    if player.anime_time == 1:
+                                        player.image = shark_left_1
+                                        player.change_texture(shark_left_1)
+                                    else:
+                                        if player.anime_time == 0:
+                                            player.image = shark_left_open
+                                            player.change_texture(shark_left_open)
         else:
             player.image = shark_left
-
 
     # Vérifions si le poisson1 est un poisson, si oui, l'afficher au cas ou il ne l'etait pas, si non , le cacher.
     def actualiser_texture(poisson):
@@ -521,6 +603,19 @@ while running:
         else:
             poisson.kill()
 
+    if player.anime_time < 8 and not player.anime_time == 0 and not player.isAnimationFliped == 1:
+        player.anime_time = player.anime_time - 1
+    if player.anime_time == 0:
+        if player.waitBeforeClose > 15:
+            player.anime_time = player.anime_time + 1
+            player.waitBeforeClose = 0
+            player.isAnimationFliped = 1
+        else:
+            player.waitBeforeClose = player.waitBeforeClose + 0.25
+    if player.anime_time < 8 and not player.anime_time == 0 and not player.isAnimationFliped == 0:
+        player.anime_time = player.anime_time + 1
+        if player.anime_time == 8:
+            player.isAnimationFliped = 0
 
     actualiser_texture(poisson1)
     if generated_fishes > 0:
@@ -638,3 +733,5 @@ print("[INFO]: Arrêt du jeu.")
 if restart:
     os.startfile('Restartscript.vbs')
     print("[INFO]: Redémarrage du jeu.")
+
+sys.exit()
