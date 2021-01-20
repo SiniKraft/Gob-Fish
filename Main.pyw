@@ -12,9 +12,11 @@ try:
     import random
     import pickle
     import os
-    from Scripts.Class.ClassPlayer import *
+    from Scripts.Class.ClassPlayer import Player
+    from Scripts.Class.ClassFish import Poisson
 except RuntimeError:
     import sys
+
     print("[ERREUR]: Impossible d'importer le modules !")
     sys.exit()
 
@@ -28,7 +30,7 @@ pygame.mixer.init()  # Sons de pygame.
 
 try:
     screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
-except RuntimeError:
+except IOError:
     screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("GobFish")
 clock = pygame.time.Clock()
@@ -126,68 +128,6 @@ estmort = False
 temp = 99
 temp_remains = 0
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = shark_right
-        self.rect = self.image.get_rect()  # Adapte le taille du personnage a la taille de l'image.
-        self.velocity = [0, 0]
-        self.rect.x = 640
-        self.rect.y = 360
-        self.vies = 4
-        self.time_vies = 0
-        self.anime_time = 8
-        self.isAnimationFliped = 0
-        self.waitBeforeClose = 0
-
-    def update(self):
-        self.rect.move_ip(*self.velocity)
-
-    def enlever_vies(self):
-        if self.time_vies < 0.1:
-            self.vies = self.vies - 1
-            self.time_vies = 30
-
-    def change_texture(self, texture):
-        self.image = texture
-
-class Poisson(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = fish_right
-        self.rect = self.image.get_rect()  # Adapte le taille du personnage a la taille de l'image.
-        self.velocity = [0, 0]
-        self.is_fish = True
-        self.remaining_time = 0
-        self.direction = "right"
-        self.direction_y = "up"
-        self.time_to_move = 0
-        self.is_evil = False
-        self.rect.y = random.randint(20, 700)
-
-    def update(self):
-        self.rect.move_ip(*self.velocity)
-
-    def kill(self):
-        self.image = no_texture
-
-    def change_texture(self, texture):
-        self.image = texture
-
-    def bouger_aleatoirement(self):
-        self.rect.x = random.randint(0, 1280)
-        self.rect.y = random.randint(0, 720)
-        if random.randint(0, 3) > 1.4:
-            self.direction = "left"
-        else:
-            self.direction = "right"
-
-    def changer_x(self, xvar):
-        self.rect.x = xvar
-
-    def obtenir_x(self):
-        return self.rect.x
-
 
 # Vérifie si le joueur et un poisson se touchent.
 
@@ -219,8 +159,8 @@ def play_swim_sound():
                 swim1.play()
 
 
-player = Player()
-poisson1 = Poisson()
+player = Player(shark_right)
+poisson1 = Poisson(fish_right)
 timeout = False
 running = True  # Arrête la fenêtre si cette variable est sur False.
 while running:
@@ -368,12 +308,9 @@ while running:
             elif event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 player.velocity[0] = 0
 
-
     if player.vies == 0:
         running = False
         estmort = True
-
-
 
 
     # IA du poisson.
@@ -395,7 +332,7 @@ while running:
                 poisson.velocity[0] = int(-300 * dt)
             else:
                 poisson.direction = "right"
-# IA en haut et en bas
+        # IA en haut et en bas
         if poisson.direction_y == "up":
             if poisson.rect.y < 0:
                 poisson.direction_y = "down"
@@ -587,6 +524,7 @@ while running:
         else:
             player.image = shark_left
 
+
     # Vérifions si le poisson1 est un poisson, si oui, l'afficher au cas ou il ne l'etait pas, si non , le cacher.
     def actualiser_texture(poisson):
         if poisson.is_fish:
@@ -602,6 +540,7 @@ while running:
                     poisson.change_texture(fish_left)
         else:
             poisson.kill()
+
 
     if player.anime_time < 8 and not player.anime_time == 0 and not player.isAnimationFliped == 1:
         player.anime_time = player.anime_time - 1
