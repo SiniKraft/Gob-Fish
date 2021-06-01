@@ -56,7 +56,15 @@ evil_fish_right = pygame.image.load("textures/evil_fish/evil_fish_right.png").co
 evil_fish_left = pygame.image.load("textures/evil_fish/evil_fish_left.png").convert_alpha()
 fish_right = pygame.image.load("textures/fish/fish_right.png").convert_alpha()
 fish_left = pygame.image.load("textures/fish/fish_left.png").convert_alpha()
+
+
+
+
 no_texture = pygame.image.load("textures/no_texture.png").convert_alpha()
+
+
+
+
 health = pygame.image.load("textures/health/health.png").convert_alpha()
 start_font = pygame.font.SysFont('Comic Sans MS', 30)
 end_font = pygame.font.SysFont('Comic Sans MS', 50)
@@ -160,7 +168,7 @@ def play_swim_sound():
 
 
 player = Player(shark_right)
-poisson1 = Poisson(fish_right)
+poisson1 = Poisson(fish_right, no_texture)
 timeout = False
 running = True  # Arrête la fenêtre si cette variable est sur False.
 while running:
@@ -396,48 +404,48 @@ while running:
 
     chrono = chrono + 0.01
     if chrono > 10 and generated_fishes == 0:
-        poisson2 = Poisson()
+        poisson2 = Poisson(fish_right, no_texture)
         generated_fishes = 1
     else:
         if chrono > 15 and generated_fishes == 1:
-            evil_poisson1 = Poisson()
+            evil_poisson1 = Poisson(fish_right, no_texture)
             evil_poisson1.is_evil = True
             generated_fishes = 2
         else:
             if not generated_fishes > 9:
                 if generated_fishes == 2 and chrono > 20:
-                    poisson3 = Poisson()
+                    poisson3 = Poisson(fish_right, no_texture)
                     generated_fishes = 3
                 else:
                     if generated_fishes == 3 and chrono > 30:
-                        poisson4 = Poisson()
+                        poisson4 = Poisson(fish_right, no_texture)
                         generated_fishes = 4
                     else:
                         if generated_fishes == 4 and chrono > 35:
-                            evil_poisson2 = Poisson()
+                            evil_poisson2 = Poisson(fish_right, no_texture)
                             evil_poisson2.is_evil = True
                             generated_fishes = 5
                         else:
                             if generated_fishes == 5 and chrono > 40:
-                                poisson5 = Poisson()
+                                poisson5 = Poisson(fish_right, no_texture)
                                 generated_fishes = 6
                             else:
                                 if generated_fishes == 6 and chrono > 45:
-                                    evil_poisson3 = Poisson()
+                                    evil_poisson3 = Poisson(fish_right, no_texture)
                                     evil_poisson3.is_evil = True
                                     generated_fishes = 7
                                 else:
                                     if generated_fishes == 7 and chrono > 50:
-                                        poisson6 = Poisson()
+                                        poisson6 = Poisson(fish_right, no_texture)
                                         generated_fishes = 8
                                     else:
                                         if generated_fishes == 8 and chrono > 55:
-                                            evil_poisson4 = Poisson()
+                                            evil_poisson4 = Poisson(fish_right, no_texture)
                                             evil_poisson4.is_evil = True
                                             generated_fishes = 9
                                         else:
                                             if generated_fishes == 9 and chrono > 60:
-                                                poisson7 = Poisson()
+                                                poisson7 = Poisson(fish_right, no_texture)
                                                 generated_fishes = 10
 
     # Verifier si le poisson doit s'arrêter de manger ou si il doit changer de direction.
