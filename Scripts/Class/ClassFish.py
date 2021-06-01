@@ -6,7 +6,7 @@ import pygame
 import random
 
 class Poisson(pygame.sprite.Sprite):
-    def __init__(self, fish_right):
+    def __init__(self, fish_right, no_texture):
         super().__init__()
         self.image = fish_right
         self.rect = self.image.get_rect()  # Adapte le taille du personnage a la taille de l'image.
@@ -17,13 +17,14 @@ class Poisson(pygame.sprite.Sprite):
         self.direction_y = "up"
         self.time_to_move = 0
         self.is_evil = False
+        self.no_texture = no_texture
         self.rect.y = random.randint(20, 700)
 
     def update(self):
         self.rect.move_ip(*self.velocity)
 
     def kill(self):
-        self.image = no_texture
+        self.image = self.no_texture
 
     def change_texture(self, texture):
         self.image = texture
