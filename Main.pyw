@@ -14,14 +14,24 @@ try:
     import os
     from Scripts.Class.ClassPlayer import Player
     from Scripts.Class.ClassFish import Poisson
-except RuntimeError:
+except RuntimeError as re:
     import sys
 
-    print("[ERREUR]: Impossible d'importer le modules !")
+    print("[ERREUR]: Impossible d'importer le modules ! %s" % str(re))
     sys.exit()
+
+joysticks = []
+try:
+    pygame.joystick.init()
+    joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+except Exception as e:
+    print(e)
+
 
 # Initialisation de Pygame
 def main():
+    using_controller = False
+    last_controller = 0
     retval = False
     pygame.init()
     pygame.font.init()
@@ -102,13 +112,19 @@ def main():
     # Lancement de l'écran titre
 
     screen.blit(title, (0, 0))
-    start_text = start_font.render('         Press SPACE to play !', True, (0, 0, 0))
-    screen.blit(start_text, (400, 600))
+    replace_string = ""
+    replace_x = 400
+    if len(joysticks) > 0:
+        replace_string = "or a controller button "
+        replace_x = 250
+    start_text = start_font.render('         Press SPACE %sto play !' % replace_string, True, (0, 0, 0))
+    screen.blit(start_text, (replace_x, 600))
     pygame.display.update()
     continuer_loop = True
     while continuer_loop:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
+                using_controller = False
                 if event.key == pygame.K_SPACE:
                     continuer_loop = False
                 elif event.key == pygame.K_ESCAPE:
@@ -117,6 +133,8 @@ def main():
             elif event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit(0)
+            elif event.type == pygame.JOYBUTTONDOWN:
+                continuer_loop = False
 
     # Définition du joueur
 
@@ -132,7 +150,6 @@ def main():
     temp = 99
     temp_remains = 0
 
-
     # Vérifie si le joueur et un poisson se touchent.
 
     def collision(poisson, player1):
@@ -145,7 +162,6 @@ def main():
         if player1.top > poisson.bottom:
             return False
         return True
-
 
     # Joue 1 des 4 sons de swim
 
@@ -162,7 +178,6 @@ def main():
                 else:
                     swim1.play()
 
-
     player = Player(shark_right)
     poisson1 = Poisson(fish_right, no_texture)
     timeout = False
@@ -172,6 +187,7 @@ def main():
         dt = clock.tick(FPS) / 1000  # Change les FPS en secondes.
         screen.fill(BLACK)  # Rempli l'arrière-plan de cette couleur.
         var_text = var_font.render(str(round(poisson_manges)), True, (255, 0, 0))
+        been_collision = 0
 
         player.time_vies = player.time_vies - 0.1
         if player.time_vies < -1:
@@ -181,6 +197,7 @@ def main():
             if eating == 1 and poisson1.is_fish:
                 poisson_manges = poisson_manges + 1
                 poisson1.is_fish = False
+                been_collision = 1
                 eat_sound.play()
 
         if generated_fishes > 0:
@@ -188,12 +205,14 @@ def main():
                 if eating == 1 and poisson2.is_fish:
                     poisson_manges = poisson_manges + 1
                     poisson2.is_fish = False
+                    been_collision = 1
                     eat_sound.play()
 
         if generated_fishes > 1:
             if collision(evil_poisson1.rect, player.rect):
                 if evil_poisson1.is_fish:
                     evil_poisson1.is_fish = False
+                    been_collision = 2
                     player.enlever_vies()
                     pic_sound.play()
 
@@ -202,6 +221,7 @@ def main():
                 if eating == 1 and poisson3.is_fish:
                     poisson_manges = poisson_manges + 1
                     poisson3.is_fish = False
+                    been_collision = 1
                     eat_sound.play()
 
         if generated_fishes > 3:
@@ -209,12 +229,14 @@ def main():
                 if eating == 1 and poisson4.is_fish:
                     poisson_manges = poisson_manges + 1
                     poisson4.is_fish = False
+                    been_collision = 1
                     eat_sound.play()
 
         if generated_fishes > 4:
             if collision(evil_poisson2.rect, player.rect):
                 if evil_poisson2.is_fish:
                     evil_poisson2.is_fish = False
+                    been_collision = 2
                     player.enlever_vies()
                     pic_sound.play()
 
@@ -223,6 +245,7 @@ def main():
                 if eating == 1 and poisson5.is_fish:
                     poisson_manges = poisson_manges + 1
                     poisson5.is_fish = False
+                    been_collision = 1
                     eat_sound.play()
 
         if generated_fishes > 6:
@@ -230,6 +253,7 @@ def main():
                 if eating == 1 and evil_poisson3.is_fish:
                     poisson_manges = poisson_manges - 4
                     evil_poisson3.is_fish = False
+                    been_collision = 2
                     player.enlever_vies()
                     pic_sound.play()
 
@@ -238,6 +262,7 @@ def main():
                 if eating == 1 and poisson6.is_fish:
                     poisson_manges = poisson_manges + 1
                     poisson6.is_fish = False
+                    been_collision = 1
                     eat_sound.play()
 
         if generated_fishes > 8:
@@ -245,6 +270,7 @@ def main():
                 if evil_poisson4.is_fish:
                     poisson_manges = poisson_manges - 4
                     evil_poisson4.is_fish = False
+                    been_collision = 2
                     player.enlever_vies()
                     pic_sound.play()
 
@@ -253,8 +279,17 @@ def main():
                 if eating == 1 and poisson7.is_fish:
                     poisson_manges = poisson_manges + 1
                     poisson7.is_fish = False
+                    been_collision = 1
                     eat_sound.play()
 
+        if using_controller and been_collision > 0:
+            try:
+                if been_collision == 1:
+                    joysticks[last_controller].rumble(1.0, 1.0, 200)
+                else:
+                    joysticks[last_controller].rumble(1.0, 1.0, 100)
+            except:
+                pass
 
         def reanimer(poisson):
             if not poisson.is_fish:
@@ -262,7 +297,6 @@ def main():
                 if poisson.remaining_time > 6:
                     poisson.is_fish = True
                     poisson.remaining_time = 0
-
 
         reanimer(poisson1)
         if generated_fishes > 0:
@@ -290,6 +324,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
+                using_controller = False
                 if event.key == pygame.K_UP or event.key == pygame.K_z:
                     player.velocity[1] = int(-300 * dt)  # 300 pixels par seconde
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
@@ -318,11 +353,30 @@ def main():
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     if shark_direction == "right":
                         player.velocity[0] = 0
+            elif event.type == pygame.JOYBUTTONDOWN:
+                using_controller = True
+                last_controller = event.joy
+                if eating == 0 and can_eat == 1:
+                    eating = 1
+                    can_eat = 0
+                    player.anime_time = 7
+            elif event.type == pygame.JOYAXISMOTION:
+                using_controller = True
+                last_controller = event.joy
+                player.velocity = [
+                    joysticks[last_controller].get_axis(0) * 5,
+                    joysticks[last_controller].get_axis(1) * 5
+                ]
+                if player.velocity[0] < 0:
+                    shark_direction = "left"
+                else:
+                    shark_direction = "right"
+            elif event.type == pygame.MOUSEMOTION:
+                using_controller = False
 
         if player.vies == 0:
             running = False
             estmort = True
-
 
         # IA du poisson.
 
@@ -358,7 +412,6 @@ def main():
                     poisson.velocity[1] = int(200 * dt)
                 else:
                     poisson.direction = "up"
-
 
         IA_poisson_normal(poisson1)
         if generated_fishes > 0:
@@ -551,7 +604,6 @@ def main():
             else:
                 poisson.kill()
 
-
         if player.anime_time < 8 and not player.anime_time == 0 and not player.isAnimationFliped == 1:
             player.anime_time = player.anime_time - 1
         if player.anime_time == 0:
@@ -653,6 +705,7 @@ def main():
                 if event.type == pygame.QUIT:
                     continuer = False
                 if event.type == pygame.KEYDOWN:
+                    using_controller = False
                     if event.key == pygame.K_RETURN:
                         continuer = False
                         restart = True
@@ -663,13 +716,15 @@ def main():
                         else:
                             if event.key == pygame.K_ESCAPE:
                                 continuer = False
+                if event.type == pygame.JOYBUTTONDOWN:
+                    continuer = False
+                    restart = True
             pygame.display.update()
             screen.blit(background, (0, 0))
             screen.blit(end_text, (120, 100))
             screen.blit(end_var_text, (420, 100))
             screen.blit(better_score_text, (80, 210))
             screen.blit(better_score_var_text, (500, 210))
-            screen.blit(var_font.render('Press ENTER to replay.', True, (0, 0, 0)), (180, 300))
             screen.blit(var_font.render('Press ENTER to replay.', True, (0, 0, 0)), (180, 300))
 
         if better_score < poisson_manges:
@@ -685,6 +740,7 @@ def main():
         print("[INFO]: Arrêt du jeu.")
 
     return retval
+
 
 while main():
     pass
