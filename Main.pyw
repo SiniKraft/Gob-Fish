@@ -119,6 +119,8 @@ def main():
         replace_x = 250
     start_text = start_font.render('         Press SPACE %sto play !' % replace_string, True, (0, 0, 0))
     screen.blit(start_text, (replace_x, 600))
+    screen.blit(start_font.render("v1.5", True, (0, 0, 0)), (0, 680))
+    screen.blit(start_font.render("github.com/SiniKraft", True, (0, 0, 0)), (980, 680))
     pygame.display.update()
     continuer_loop = True
     while continuer_loop:
@@ -729,6 +731,7 @@ def main():
 
         if better_score < poisson_manges:
             better_score = poisson_manges
+            os.makedirs("save/", exist_ok=True)
             outfile = open("save/save.dat", 'wb')
             pickle.dump(better_score, outfile)
             outfile.close()

@@ -1,2 +1,3 @@
-"Gob Fish !" created by Nathyperfort.
-For reset the better score, make a copy and delete save.dat. Then create a new empty text file named save.dat.
+"Gob Fish !" created by SiniKraft.
+To reset the best score, make a copy and delete save.dat.
+github.com/SiniKraft
