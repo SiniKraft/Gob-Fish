@@ -12,6 +12,7 @@ try:
     import random
     import pickle
     import os
+    import android
     from Scripts.Class.ClassPlayer import Player
     from Scripts.Class.ClassFish import Poisson
 except RuntimeError as re:
